@@ -1,4 +1,4 @@
-package go_hexcolor
+package hexcolor
 
 import (
 	"testing"
