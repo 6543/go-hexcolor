@@ -18,6 +18,7 @@ func NewHexColor(hc string) (*HexColor, error) {
 	c := &HexColor{original: hc}
 	hc = strings.TrimLeft(strings.ToLower(hc), "#")
 
+	// normalize hex color
 	if _, err := strconv.ParseUint(hc, 16, 24); err == nil {
 		if len(hc) == 6 {
 			c.hex = hc
@@ -29,7 +30,12 @@ func NewHexColor(hc string) (*HexColor, error) {
 		}
 	}
 
-	// handle named colors
+	// resolve named color to hex color
+	val, exist := CSS3ColorMap[strings.TrimSpace(hc)]
+	if exist {
+		c.hex = string(val)
+		return c, nil
+	}
 
 	return nil, fmt.Errorf("Malformed color: %s", hc)
 }
