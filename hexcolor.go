@@ -24,7 +24,7 @@ func NewHexColor(hc string) (*HexColor, error) {
 			return c, nil
 		}
 		if len(hc) == 3 {
-			c.hex = hc[:1] + hc[:1] + hc[1:][:1] + hc[1:][:1] + hc[2:] + hc[2:]
+			c.hex = string([]byte{hc[0], hc[0], hc[1], hc[1], hc[2], hc[2]})
 			return c, nil
 		}
 	}
