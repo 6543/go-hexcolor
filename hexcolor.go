@@ -3,7 +3,6 @@ package go_hexcolor
 import (
 	"fmt"
 	"image/color"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -14,35 +13,20 @@ type HexColor struct {
 	hex      string
 }
 
-// The compiled regular expression used to test the validity of a color statement
-var (
-	hexDefault *regexp.Regexp
-	hexShort   *regexp.Regexp
-)
-
-// The raw regular expression string used for testing the validity
-const (
-	hexDefaultRaw string = `[0-9a-f]{6}`
-	hexShortRaw   string = `[0-9a-f]{3}`
-)
-
-func init() {
-	hexDefault = regexp.MustCompile("^" + hexDefaultRaw + "$")
-	hexShort = regexp.MustCompile("^" + hexShortRaw + "$")
-}
-
 // NewHexColor convert string into a HexColor
 func NewHexColor(hc string) (*HexColor, error) {
 	c := &HexColor{original: hc}
 	hc = strings.TrimLeft(strings.ToLower(hc), "#")
 
-	if hexDefault.MatchString(hc) {
-		c.hex = hc
-		return c, nil
-	}
-	if hexShort.MatchString(hc) {
-		c.hex = hc[:1] + hc[:1] + hc[1:][:1] + hc[1:][:1] + hc[2:] + hc[2:]
-		return c, nil
+	if _, err := strconv.ParseUint(hc, 16, 24); err == nil {
+		if len(hc) == 6 {
+			c.hex = hc
+			return c, nil
+		}
+		if len(hc) == 3 {
+			c.hex = hc[:1] + hc[:1] + hc[1:][:1] + hc[1:][:1] + hc[2:] + hc[2:]
+			return c, nil
+		}
 	}
 
 	// handle named colors
@@ -63,22 +47,14 @@ func (c *HexColor) ToRGBA() (*color.RGBA, error) {
 	if c == nil {
 		return nil, nil
 	}
-	rr, err := strconv.ParseUint(c.hex[:2], 16, 8)
-	if err != nil {
-		return nil, err
-	}
-	gg, err := strconv.ParseUint(c.hex[2:][:2], 16, 8)
-	if err != nil {
-		return nil, err
-	}
-	bb, err := strconv.ParseUint(c.hex[4:], 16, 8)
-	if err != nil {
+	var r, g, b uint8
+	if _, err := fmt.Sscanf(c.hex, "%2x%2x%2x", &r, &g, &b); err != nil {
 		return nil, err
 	}
 	return &color.RGBA{
-		R: uint8(rr),
-		G: uint8(gg),
-		B: uint8(bb),
+		R: r,
+		G: g,
+		B: b,
 		A: 0xff,
 	}, nil
 }
