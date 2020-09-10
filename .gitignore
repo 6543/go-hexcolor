@@ -13,3 +13,6 @@ _test
 # MS VSCode
 .vscode
 __debug_bin
+
+# vendor files
+vendor/
