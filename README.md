@@ -6,4 +6,4 @@
  * Normalize/Parse hex color
  * convert from/to color.RGBA
  * Resolve hex color by name
- * CSS3 named colo constants
+ * CSS3 named color's constants

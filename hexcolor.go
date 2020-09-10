@@ -16,7 +16,7 @@ type HexColor struct {
 // NewHexColor convert string into a HexColor
 func NewHexColor(hc string) (*HexColor, error) {
 	c := &HexColor{original: hc}
-	hc = strings.TrimLeft(strings.ToLower(hc), "#")
+	hc = strings.TrimLeft(strings.TrimSpace(strings.ToLower(hc)), "#")
 
 	// normalize hex color
 	if _, err := strconv.ParseUint(hc, 16, 24); err == nil {
@@ -31,7 +31,7 @@ func NewHexColor(hc string) (*HexColor, error) {
 	}
 
 	// resolve named color to hex color
-	val, exist := CSS3ColorMap[strings.TrimSpace(hc)]
+	val, exist := CSS3ColorMap[hc]
 	if exist {
 		c.hex = string(val)
 		return c, nil
