@@ -20,13 +20,13 @@ func TestNewHexColor(t *testing.T) {
 
 	for _, tc := range cases {
 		hc, err := NewHexColor(tc.color)
-		if tc.err && err == nil {
-			t.Fatalf("expected error for color: %q", tc.color)
-		} else if !tc.err && err != nil {
-			t.Fatalf("error for color %q: %s", tc.color, err)
-		}
-		if assert.NotNil(t, hc) {
-			assert.EqualValues(t, tc.hex, hc.hex)
+		if tc.err {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+			if assert.NotNil(t, hc) {
+				assert.EqualValues(t, tc.hex, hc.hex)
+			}
 		}
 	}
 }
