@@ -8,3 +8,26 @@
 
 ## ToDo
 * [ ] Predefine standard colors (red, blue, ... based on CSS colors)
+
+## Usage
+
+Download: `go get -u github.com/6543/go-hexcolor`
+
+Example:
+```go
+import (
+	"fmt"
+	"github.com/6543/go-hexcolor"
+)
+
+func main() {
+	c, err := hexcolor.NewHexColor("#adf")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(c.ToString())
+}
+```
+
+## Contribution
+Fork repository, clone it, make changes, push to new branch and submit a pull request.
